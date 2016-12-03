@@ -1,10 +1,12 @@
 package com.dev.app.week1.member;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.dev.app.week1.R;
 
@@ -12,7 +14,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     MemberService service;
 
     EditText et_id, et_pw;
-    Button bt_submit, bt_cancel;
+    Button bt_login, bt_join;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,24 +25,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         et_id = (EditText) findViewById(R.id.et_id);
         et_pw = (EditText) findViewById(R.id.et_pw);
 
-        bt_submit = (Button) findViewById(R.id.bt_submit);
-        bt_cancel = (Button) findViewById(R.id.bt_cancel);
+        bt_login = (Button) findViewById(R.id.bt_login);
+        bt_join = (Button) findViewById(R.id.bt_join);
 
-        bt_submit.setOnClickListener(this);
-        bt_cancel.setOnClickListener(this);
+        bt_login.setOnClickListener(this);
+        bt_join.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.bt_submit :
+            case R.id.bt_login :
                 MemberDTO param = new MemberDTO();
-                param.setId(et_id.getText().toString());
+                String id = et_id.getText().toString();
+                param.setId(id);
                 param.setPw(et_pw.getText().toString());
-                service.login(param);
+                if(service.login(param)){
+                    Toast.makeText(LoginActivity.this, "로그인성공",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+                    intent.putExtra("id", id);
+                    this.startActivity(intent);
+                }else{
+                    Toast.makeText(LoginActivity.this, "로그인실패",Toast.LENGTH_LONG).show();
+                }
                 break;
-            case R.id.bt_cancel :
-
+            case R.id.bt_join :
+                this.startActivity(new Intent(LoginActivity.this, JoinActivity.class));
                 break;
         }
     }

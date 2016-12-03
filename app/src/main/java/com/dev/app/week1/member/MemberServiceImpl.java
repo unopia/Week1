@@ -10,58 +10,51 @@ import java.util.ArrayList;
  */
 
 public class MemberServiceImpl implements MemberService {
-    MemberDAO memberDAO;
-
+    MemberDAO dao;
     public MemberServiceImpl(Context context) {
-        memberDAO = new MemberDAO(context);
+        dao = new MemberDAO(context);
     }
 
     @Override
     public void join(MemberDTO param) {
-        Log.d("JOIN ID : ", param.getId());
-        Log.d("JOIN PW : ", param.getPw());
-        Log.d("JOIN NAME : ", param.getName());
-        Log.d("JOIN EMAIL : ", param.getEmail());
-        Log.d("JOIN PHONE : ", param.getPhone());
-        Log.d("JOIN ADDR : ", param.getAddr());
-        memberDAO.insert(param);
+        Log.d("JOIN ID: ",param.getId());
+        Log.d("JOIN PW: ",param.getPw());
+        Log.d("JOIN NAME: ",param.getName());
+        Log.d("JOIN EMAIL: ",param.getEmail());
+        Log.d("JOIN PHONE: ",param.getPhone());
+        Log.d("JOIN ADDRESS: ",param.getAddr());
+        dao.insert(param);
     }
 
     @Override
     public int count() {
         int count = 0;
-        count = memberDAO.selectCount();
         return count;
     }
 
     @Override
     public MemberDTO detail(String id) {
-        MemberDTO member = new MemberDTO();
-        member = memberDAO.selectOne(id);
-        return member;
+        return dao.selectOne(id);
     }
 
     @Override
     public ArrayList<MemberDTO> list() {
-        ArrayList<MemberDTO> list = new  ArrayList<MemberDTO>();
-        list = memberDAO.selectList();
-        return list;
+        return dao.selectList();
     }
 
     @Override
-    public MemberDTO login(MemberDTO param) {
-        MemberDTO member = new MemberDTO();
-        member = memberDAO.login(param);
-        return member;
+    public boolean login(MemberDTO param) {
+        return param.getPw().equals(dao.login(param).getPw());
+
     }
 
     @Override
     public void update(MemberDTO param) {
-        memberDAO.update(param);
+
     }
 
     @Override
-    public void delete(MemberDTO param) {
-        memberDAO.delete(param);
+    public void delete(String id) {
+        dao.delete(id);
     }
 }
